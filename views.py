@@ -1,4 +1,6 @@
 from webob import Response
+from jinja2 import Template
+from config.jinja import env
 
 def http_404(request):
     response = Response()
@@ -12,5 +14,7 @@ def hello_world(request):
 
 def welcome(request):
     response = Response()
-    response.text = 'Welcome to this page'
+    template = env.get_template('welcome.html')
+    rendered = template.render(heading='Welcome to my new page')
+    response.text = rendered
     return response
