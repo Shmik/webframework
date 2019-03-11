@@ -1,4 +1,8 @@
 from webob import Request, Response
+from urls import urlpatters
+from router import Router
+
+router = Router()
 
 class App(object):
 
@@ -9,6 +13,5 @@ class App(object):
         return response(environ, start_response)
 
     def handle_request(self, request):
-        response = Response()
-        response.text = 'Hello, World again'
-        return response
+        view = router(request.path)
+        return view(request)
