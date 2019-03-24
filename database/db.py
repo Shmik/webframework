@@ -1,15 +1,5 @@
-from config.settings import DATABASE_SETTINGS
 import psycopg2
+from config.settings import DNS
 
-
-class Connection():
-    def __enter__(self):
-        self.conn = psycopg2.connect(
-            database=DATABASE_SETTINGS['database_name'],
-            user=DATABASE_SETTINGS['user'],
-            password=DATABASE_SETTINGS['password']
-        )
-        return self.conn
-
-    def __exit__(self, *args):
-        self.conn.close()
+def get_connection():
+    return psycopg2.connect(DNS)

@@ -1,9 +1,8 @@
-DATABASE_SETTINGS = {
-    'user': 'myuser',
-    'password': 'mypassword',
-    'database_name': 'dbname'
-}
+DNS = 'dbname=dbname user=myuser password=mypassword'
 
+INSTALLED_MODELS = [
+    'person.Person',
+]
 
 try:
     from .local_settings import *
