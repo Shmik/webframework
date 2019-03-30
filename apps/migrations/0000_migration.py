@@ -1,0 +1,1 @@
+CREATE TABLE "person" ("first_name" VARCHAR(55), "id" serial PRIMARY KEY, "last_name" VARCHAR(55))
