@@ -58,6 +58,10 @@ class MakeMigrations():
         for model in model_register.get_apps():
             self.make_for_model(model)
 
+    def make_changes_for_all_apps(self):
+        for model in model_register.get_apps():
+            self.alter_model_fields(model)
+
     def make_for_model(self, model):
         table_name = model.get_table()
         if not self.check_table_exists(table_name):
