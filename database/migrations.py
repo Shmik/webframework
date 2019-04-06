@@ -64,6 +64,35 @@ class MakeMigrations():
             query = self.build_create_table_query_for_model(model)
             self.create_migration_file(query)
 
+    def alter_model_fields(self, model):
+        """
+        Only add the ability to add and remove fields
+        """
+        column_names_db = [x[0] for x in self.get_column_data(model.get_table())]
+        model_fields = model.get_fields()
+        model_field_names = model_fields.keys()
+        alteration_queries = []
+        for field_name, field_class in model.get_fields().items():
+            if field_name not in column_names_db:
+                query = sql.SQL("{} ").format(sql.Identifier(field_name)) + field_class.create_sql
+                if getattr(field_class, 'max_length', None):
+                    query += sql.SQL("({})").format(sql.Literal(field_class.max_length))
+                add_collumn = sql.SQL("ALTER TABLE {} ADD COLUMN {}" ).format(
+                    sql.Identifier(model.get_table()),
+                    query
+                )
+                alteration_queries.append(add_collumn)
+        for field_name in column_names_db:
+            if field_name not in model_field_names:
+                drop_collumn = sql.SQL("ALTER TABLE {} DROP COLUMN {}" ).format(
+                    sql.Identifier(model.get_table()),
+                    sql.Identifier(field_name)
+                )
+                alteration_queries.append(drop_collumn)
+        with get_connection() as conn:
+            for query in alteration_queries:
+                self.create_migration_file(query.as_string(conn))
+
     def build_create_table_query_for_model(self, model):
         columns = []
         for field_name, field_class in model.get_fields().items():
