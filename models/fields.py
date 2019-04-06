@@ -26,6 +26,7 @@ class DateTimeField(Field):
 
 
 class PrimaryKeyField(Field):
+    defaut=None
     udt_name='int4'
     create_sql = sql.SQL('serial PRIMARY KEY')
 

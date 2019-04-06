@@ -2,6 +2,13 @@ from models.fields import Field, PrimaryKeyField
 
 class Model():
     id = PrimaryKeyField()
+
+    def __new__(cls, *args, **kwargs):
+        obj = object.__new__(cls, *args, **kwargs)
+        for name, field_class in cls.get_fields().items():
+            setattr(obj, name, getattr(field_class, 'default', None))
+        return obj
+
     @classmethod
     def get_name(cls):
         return cls.__name__.lower()
